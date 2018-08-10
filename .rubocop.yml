@@ -1,0 +1,21 @@
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - '**/Gemfile'
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+
+Metrics/LineLength:
+  Max: 80
+
+Metrics/BlockLength:
+  Enabled: false

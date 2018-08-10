@@ -1,0 +1,213 @@
+# RSpec Expectations
+:source-highlighter: pygments
+:pygments-style: pastie
+:icons: font
+:experimental:
+:imagesdir: ./images
+
+## Getting wording right
+
+* link:spec/wording_spec.rb[wording_spec.rb]
+
+```sh
+rspec spec/wording_spec.rb -fd
+```
+
+.Example 1
+```ruby
+RSpec.describe 'A kettle of water' do
+  describe 'when boiling' do
+    it 'can make tea'
+    it 'can make coffee'
+  end
+end
+```
+
+.Example 2
+```ruby
+RSpec.describe 'A kettle of water' do
+  context 'when boiling' do
+    it 'can make tea'
+    it 'can make coffee'
+  end
+end
+```
+
+.Example 3
+```ruby
+RSpec.describe PhoneNumberParser, ​'parses phone numbers'​ ​do​
+​ ​it​ ​'in xxx-xxx-xxxx form'​
+​ ​it​ ​'in (xxx) xxx-xxxx form'​
+​​end​
+```
+
+.Example 4
+```ruby
+RSpec.describe PhoneNumberParser ​do​
+​ ​example​ ​'in xxx-xxx-xxxx form'​
+​ ​example ​'in (xxx) xxx-xxxx form'​
+​​end​
+```
+
+.Example 5
+```ruby
+RSpec.describe ​'Deprecations'​ ​do​
+​ ​specify​ ​'MyGem.config is deprecated in favor of MyGem.configure'​
+​ ​specify​ ​'MyGem.run is deprecated in favor of MyGem.start'​
+​end​
+```
+
+
+## How matchers work?
+
+* http://pryrepl.org[Pry] – an alternative to the standard IRB shell for Ruby
+
+Parts of an Expectation:
+```ruby
+expect( subject ).to matcher, 'custom failure message'
+expect( description ).to eg( 1 ), 'this could not happen'
+```
+
+
+```ruby
+require 'rspec/expectations'
+include RSpec::Matchers
+
+matcher = Object.new
+expect(1).to matcher
+```
+
+Define the `matches?` method.
+```ruby
+def matcher.matches?(actual)
+  actual == 1
+end
+```
+and again run
+```ruby
+expect(1).to matcher
+```
+
+Now try
+```ruby
+expect(2).to matcher
+```
+Define `failure_message`
+```ruby
+def matcher.failure_message
+  'expected object to equal 1'
+end
+```
+and run again
+```ruby
+# throws ExpectationNotMetError
+expect(2).to matcher
+```
+
+Another perspectiv on expectations:
+```ruby
+expect_one = expect(1)
+be_one = eq(1)
+
+expect_one.to(be_one)
+```
+
+
+## Composing matchers in Examples
+
+1. Zaczynamy od uruchomienia na konsoli _Pry_:
++
+```sh
+$ pry
+```
+Następnie wczytujemy _expectations_ i włączamy RSpec _matchers_:
++
+```ruby
+require 'rspec/expectations'
+include RSpec::Matchers
+```
+
+1. Passing one matcher into another.
++
+```ruby
+numbers = [2.71, 3.14]
+
+expect(numbers).to start_with(2.71)
+expect(numbers).to start_with(be_within(0.01).of(Math::E))
+```
++
+Failure messages (use an alias):
++
+```ruby
+expect([]).to start_with(be_within(0.01).of(Math::E))
+#  expected [] to start with be within 0.01 of 2.7182
+expect([]).to start_with(a_value_within(0.01).of(Math::E))
+#  expected [] to start with a value within 0.01 of 2.7182
+```
+
+2. Embedding matchers.
++
+```ruby
+math_constants = [
+  { name: 'e', approx_value: 2.71 },
+  { name: '𝜋', approx_value: 3.14 }
+]
+expect(math_constants).to start_with(
+  { name: 'e', approx_value: a_value_between(2.7, 2.8) },
+  { name: '𝜋', approx_value: a_value_between(3.1, 3.2) }
+)
+```
+
+3. Logical expressions.
++
+```ruby
+rainbow_colors = %w( red orange yellow green blue indigo violet )
+expect(rainbow_colors).to start_with('red').and end_with('violet')
+```
+
+## How to display generated descriptions?
+
+```ruby
+start_with('red').description
+# => "start with \"red\""
+(start_with('red').and end_with('violet')).description
+# => "start with \"red\" and end with \"violet\""
+```
+
+## Using subjects to reduce duplication in specs
+
+```ruby
+class Rainbow
+  attr_reader :colors
+  def initialize
+    @colors = %w( red orange yellow green blue indigo violet )
+  end
+end
+```
+
+Run specs:
+```sh
+rspec spec/rainbow_spec.rb
+```
+
+Without subject.
+```ruby
+RSpec.describe Rainbow, '#colors' do
+  specify do
+    expect(Rainbow.new.colors).to include('orange', 'indigo')
+  end
+  specify do
+    expect(Rainbow.new.colors).not_to include('brown')
+  end
+end
+```
+
+With subject.
+```ruby
+RSpec.describe Rainbow, '#colors' do
+  subject { Rainbow.new.colors }
+
+  it { is_expected.to include('orange', 'indigo')
+  it { is_expected.not_to include('brown') }
+end
+```

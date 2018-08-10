@@ -1,0 +1,10 @@
+---
+IrresponsibleModule:
+  exclude:
+  - A
+  - B
+  - DocServer
+UncommunicativeModuleName:
+  exclude:
+  - A
+  - B

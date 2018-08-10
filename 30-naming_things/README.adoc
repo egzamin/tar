@@ -1,0 +1,321 @@
+# Four Rules of Simple Design
+:source-highlighter: pygments
+:pygments-style: pastie
+:icons: font
+:experimental:
+:imagesdir: ./images
+
+By Kent Beck.
+
+. Tests Pass
+. Expresses Intent
+. No Duplication
+. Small
+
+
+## Game of Life
+
+* https://pl.wikipedia.org/wiki/Gra_w_życie[Gra w życie].
+* https://github.com/mmozuras/life[Ruby implementation of The Game of Life]
+  by Mindaugas Mozūras.
+
+
+## Test Names Should Influence Object’s API
+
+```ruby
+def test_a_new_world_is_empty
+  world = World.new
+  assert_equal 0, world.living_cells.count
+end
+
+def test_a_cell_can_be_added_to_the_world
+  world = World.new
+  world.set_living_at(1, 1)
+  assert_equal 1, world.living_cells.count
+end
+```
+
+Possible changes.
+
+```ruby
+def test_a_new_world_is_empty
+  world = World.new
+  assert_true world.empty?
+end
+
+def test_a_cell_can_be_added_to_the_world
+  world = World.new
+  world.set_living_at(1, 1)
+  assert_true world.alive_at?(1, 1)
+end
+
+def test_after_adding_a_cell_the_world_is_not_empty
+  world = World.new
+  world.set_living_at(1, 1)
+  assert_false world.empty?
+end
+```
+
+
+## Duplication of Knowledge about Topology (data clump smell)
+
+```ruby
+class World
+  def set_living_at(x, y)
+  end
+  def alive_at?(x, y)
+  end
+end
+```
+
+Duplication.
+
+```ruby
+class World2
+  def add_living_at(location)
+  end
+  def alive_at?(location)
+  end
+end
+```
+
+```ruby
+class Location
+  attr_reader :x, :y
+  def initialize(x, y)
+    @x = x; @y = y
+  end
+end
+```
+
+
+## Breaking Abstraction Level
+
+```ruby
+def test_world_is_not_empty_after_adding_a_cell
+  location = Location.new(1,1)
+  world = World.empty world.set_living_at(location)
+
+  assert_false world.empty?
+end
+```
+
+Our test code is implying that the empty? method is somehow dependent on the
+coordinates, themselves.
+
+```ruby
+it '(mocking location) the world with a living cell is not empty' do
+  location = double('location')
+  world.add_living_at(location)
+
+  expect(world.empty?).to eq(false)
+end
+```
+
+By tying this test to a concrete implementation of 2 dimensions,
+via the `(1,1)` tuple, rather than the `Location` abstraction,
+*we are laying the groundwork for fragile tests*:
+change the topology and tons of tests fail that are not related
+to the coordinate system. This *coupling* is an example of
+*duplication*: spreading the knowledge of the topology not just throughout the
+code, but also throughout the test suite.
+
+
+## Naive Duplication
+
+Look at the duplication of `number_of_neighbors == 3` below.
+
+```ruby
+class Cell
+  attr_reader :alive # true | false
+  def alive_in_next_generation?
+    if alive
+      neighbor_count == 2 || neighbor_count == 3
+    else
+      neighbor_count == 3
+    end
+  end
+end
+```
+
+In the code below the duplication was removed.
+What is wrong with the dried code.
+
+```ruby
+class Cell
+  def alive_in_next_generation?
+    (alive && neighbor_count == 2) || neighbor_count == 3
+  end
+end
+```
+
+Every piece of knowledge has one and only one representation.
+
+The two 3s above are not the same. Why?
+
+One useful technique to keep from mistaking similar-looking code as actual
+knowledge duplication is to *explicitly name the concepts* before you try to
+eliminate the duplication. For example
+
+```ruby
+class Cell
+  def alive_in_next_generation?
+    if alive
+      # neighbor_count == 2 || neighbor_count == 3
+      stable_neighborhood?
+    else
+      # neighbor_count == 3
+      genetically_fertile_neighborhood?
+    end
+  end
+end
+```
+
+
+## Procedural Polymorphism
+
+Why is “alive” the state we are interested in? What if we add another state?
+
+```ruby
+class Cell
+  def alive_in_next_generation?
+    if alive
+      stable_neighborhood?
+    else
+      genetically_fertile_neighborhood?
+    end
+  end
+end
+```
+
+What about this code?
+
+```ruby
+class LivingCell
+  def alive_in_next_generation?
+    # neighbor_count == 2 || neighbor_count == 3
+    stable_neighborhood?
+  end
+end
+
+class DeadCell
+  def alive_in_next_generation?
+    # neighbor_count == 3
+    genetically_fertile_neighborhood?
+  end
+end
+```
+
+Fixing the names to match the actual concepts. +
+(Breaks polymorphism.)
+
+```ruby
+class LivingCell
+  def stays_alive?
+    neighbor_count == 2 || neighbor_count == 3
+  end
+end
+
+class DeadCell
+  def comes_to_life?
+    neighbor_count == 3
+  end
+end
+```
+
+
+## Behavior Attractors
+
+A code sample.
+
+```ruby
+class World
+  def set_living_at(x, y)
+  end
+  def alive_at?(x, y)
+  end
+end
+
+class Cell
+  attr_reader :x, :y
+  def alive_in_next_generation?
+    # run rules
+  end
+end
+```
+
+For these methods, we need neighbors locations.
+
+```ruby
+def neighbors_of(x, y)
+  # calculate the coordinates of neighbors
+end
+```
+
+Now, an important question is: *Where do we put this method?*
+
+Determining the right place for a new behavior can be *very* challenging.
+
+We have the following possibilites: World (God class), Cell, Location class
+It seems that is the natural behavior for Location class.
+
+```ruby
+class Location
+  attr_reader :x, :y
+  def neighbors
+    # calculate a list of locations that are considered neighbors
+  end
+end
+```
+
+This is called a *behavior attractor* – a class that naturally accept
+new behaviors that arise.
+
+
+## Testing State vs Testing Behavior
+
+Developing a very *state-focused* test suite.
+(We are checking what, if any, state change occured.)
+
+```ruby
+def test_a_world_starts_out_empty
+  world = World.new
+  assert_true world.empty?
+end
+
+def test_world_is_not_empty_after_setting_a_living_cell
+  world = World.new
+  location = Location.random
+  world.set_living_at(location)
+  assert_false world.empty?
+end
+```
+
+Developing code *behavior-focused* way.
+
+> Building our system in a behavior-focused way is about only
+  building the things that are absolutely needed and only at the time
+  they are needed.
+
+So, in the code above we are asking:
+
+1. How do we know that we want to set an individual cell?
+    1. Why do we need to set an individual cell?
+      We might set up the initial pattern.
+      (This leads to another question.)
+    1. Why do we need the initial pattern?
+      The point of the game is to *calculate the next generation*.
+      (Identified a fundamental behavior.)
+1. How do we know that we want to check that the world is empty?
+
+```ruby
+def test_a_new_world_is_empty
+  assert_true World.new.empty?
+end
+
+def test_an_empty_world_stays_empty_after_a_tick
+  world = World.new
+  next_world = world.tick
+  assert_true next_world.empty?
+end
+```

@@ -1,0 +1,140 @@
+# Zaczynamy
+:source-highlighter: pygments
+:pygments-style: pastie
+:icons: font
+:experimental:
+:imagesdir: ./images
+:toc!:
+
+Zawsze zaczynamy od wykonania tych poleceń:
+```sh
+ruby -v # ~> 2.4.2
+bundle init
+rspec --init
+mkdir lib
+```
+uaktualnienia wygenerowanego pliku _Gemfile_:
+```ruby
+gem 'rspec', '~> 3.7.0'
+```
+i wygenerowania pliku _Gemfile.lock_:
+```sh
+bundle install # admin
+bundle install --path .bundle # user
+```
+
+Na koniec tworzymy (pusty) plik na testy:
+```sh
+touch spec/00_book_spec.rb
+```
+
+
+## Groups, examples (tests, specs), and expectations
+
+* link:spec/00_book_spec.rb[00_book_spec.rb]
+
+The main difference between *RSpec* and *Minitest*:
+
+```ruby
+assert_equal('bestseller', description, 'Book is not bestseller')
+```
+
+* link:spec/01_book_spec.rb[01_book_spec.rb]
+* link:spec/02_book_spec.rb[02_book_spec.rb] – add new test/example
+
+
+## RSpec Expectations
+
+* https://github.com/rspec/rspec-expectations[RSpec Expectations].
+
+Running expectations in a Ruby console.
+
+```ruby
+require 'rspec/expectations'
+include RSpec::Matchers
+
+subject = 1
+matcher = eq(1)
+expect(subject).to matcher
+
+expect(1).to eq(1)
+```
+
+
+## Sharing setup
+
+Supported ways:
+
+. _hooks_ – run at specific times.
+. _helper methods_ – regular Ruby methods
+. _let_ – data initialization
+
+First, remove duplicated/shared code: `book = Book.new('bestseller', [])`.
+
+. *Before hook* is run before each example.
++
+```ruby
+RSpec.describe 'A book' do
+  before { @book = Book.new('bestseller', []) }
+end
+```
++
+The examples/tests should be updated: `book` -> `@book`.
+Useful for running common code, ex. removing database.
+
+. `book` *helper method*.
++
+```ruby
+RSpec.describe 'A book' do
+  def book
+    @book ||= Book.new('bestseller', [])
+  end
+end
+```
++
+First, undo the change: `book` -> `@book`. +
+Note that this `Book.new('bestseller', [])` does not
+
+. Initalize variable with *let*: link:spec/03_book_spec.rb[03_book_spec.rb].
+
+
+## Different ways running _rspec_ command
+
+1. At the command line, wrap every Ruby program with `bundle exec` –
+   fast but inefficient (checks if right gem versions are installed).
+1. Call `Bundler.require` from your Ruby code, but there are
+   http://myronmars.to/n/dev-blog/2012/12/5-reasons-to-avoid-bundler-require[Reasons to Avoid Bundler.require]
+1. Use Bundler’s stand-alone mode – only uses Bundler when gems are installed:
++
+```sh
+bundle install --standalone --binstubs # -> bundle/bundler/setup.rb which sets $LOAD_PATH
+```
+This method is used in large project.
+
+## Use different formatters
+
+```sh
+# gem install coderay # use color for output, add to Gemfile
+bundle exec rspec --only-failures # edit spec_helper.rb
+bundle exec rspec --only-failures
+bundle exec rspec -f p spec/04_book_spec.rb # default formatter
+bundle exec rspec -f d spec/04_book_spec.rb # documentation formatter
+bundle exec rspec -f j spec/04_book_spec.rb | jq # try JSON formatter
+```
+
+## Using context in groups
+
+link:spec/04_book_spec.rb[04_book_spec.rb]:
+
+. Running failed tests.
+. Running failed tests (in Atom).
+. Pending tests – marking work in progress
++
+```ruby
+  it 'costs €100'
+  it 'costs €100' do
+    pending 'Cost not implemented yet'
+    cost = rspec_book.cost
+    expect(cost).to eq(100)
+  end
+```

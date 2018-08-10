@@ -1,0 +1,324 @@
+# RSpec Mocks
+:source-highlighter: pygments
+:pygments-style: pastie
+:icons: font
+:experimental:
+:imagesdir: ./images
+
+[quote, Myron Marston & Ian Dees, Effective Testing with RSpec 3]
+____
+In movies, a *stunt double* stands in for an actor, absorbing a punch or a fall
+when the actor *can’t* or *shouldn’t* do so. In test frameworks like _RSpec_,
+a test double fulfills the same role. It stands in for another object during
+testing.
+____
+
+{nbsp}
+
+Gerard Meszaros, _xUnit Test Patterns Refactoring Test Code_, Addison Wesley (2007).
+
+* http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html[Mocks, Fakes, Stubs and Dummies]
+* http://xunitpatterns.com/Test%20Double%20Patterns.html[Test Double Patterns]
+** http://xunitpatterns.com/Test%20Double.html[Test Double] also known as *Imposter*
+** http://xunitpatterns.com/Test%20Spy.html[Test Spy]
+** http://xunitpatterns.com/Mock%20Object.html[Mock Object]
+** http://xunitpatterns.com/Fake%20Object.html[Fake Object]
+** http://xunitpatterns.com/Configurable%20Test%20Double.html[Configurable Test Double]
+** http://xunitpatterns.com/Hard-Coded%20Test%20Double.html[Hard-Coded Test Double]
+
+## Use high fidelity fakes
+
+These follows closely the original behavior. Examples:
+
+* https://github.com/fakefs/fakefs[FakeFS]
+* https://github.com/fog/fog[Fog] gem mocks Amazon services, Rackspace, …
+* https://github.com/vcr/vcr[VCR] gem fakes HTTP interactions
+* https://ruby-doc.org/stdlib-2.4.2/libdoc/stringio/rdoc/index.html[StringIO] distributed with Ruby
+
+See link:spec/doc_server_spec.rb[doc_server_spec.rb] for a StringIO example.
+
+
+## https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics/scope[RSpec Mocks 3.6]
+
+https://relishapp.com/rspec/rspec-mocks/v/3-6/docs/basics[Podstawy] –
+test doubles, allowing messages, expecting messages, partial test doubles,
+null object doubles, spies, scope.
+
+Examples:
+
+* link:spec/verifying_doubles.rb[verifying doubles]:
+** link:https://github.com/rspec/rspec-mocks#argument-matchers[Argument Matchers] (docs)
+* link:https://github.com/egzamin/tar/tree/master/labs/05-doubles[labs/05-doubles]
+
+
+## Usage Modes
+
+Stub:: Returns canned responses, avoiding any meaningful computation or I/O
+Mock:: Expects specific messages; will raise an error if it doesn’t receive them by the end of the example
+Null Object:: A benign test double that can stand in for any object; returns itself in response to any message
+Spy:: Records the messages it receives, so that you can check them later
+
+* http://rubyblog.pro/2017/10/rspec-difference-between-mocks-and-stubs[RSpec: difference between mocks and stubs]
+
+
+## Origin – what is underlying class
+
+Pure Double:: A double whose behavior comes entirely from the test framework; this is what people normally think of when they talk about mock objects
+Partial Double:: An existing Ruby object that takes on some test double behavior; its interface is a mixture of real and fake implementations
+Verifying Double:: Totally fake like a pure double, but constrains its interface based on a real object like a partial double; provides a safer test double by verifying that it matches the API it’s standing in for
+Stubbed Constant:: A Ruby constant—such as a class or module name—which you create, remove, or replace for a single test
+
+
+## Exploring doubles interactively in Pry (Pure Doubles only)
+
+* Receiving expected messages (pol. komunikat, wiadomość).
+* Receiving unexpected messages.
+* Not receiving expected messages.
+
+```ruby
+require 'rspec/mocks/standalone'
+```
+
+
+### Generic test doubles
+
+```ruby
+account = double('Account')
+account.charge
+# =>
+# RSpec::Mocks::MockExpectationError: \
+#   <Double "Account"> received unexpected message :charge with (no args)
+```
+
+
+### Stubs
+
+Basic setup:
+
+```ruby
+conn = double('Faraday::Connection', host: 'tao.com', port: 80)
+conn.host
+```
+
+Alternative 1 (use `receive_messages`) Arrange, Assert, Act (*note changed order in 3A pattern*)
+
+```ruby
+conn = double('Faraday:Connection')
+allow(conn).to receive_messages(host: 'tao.com', port: 80)
+conn.host
+```
+
+Alternative 2 (use `receive` & `and_return`)
+```ruby
+conn = double('Faraday:Connection')
+allow(conn).to receive(:host).and_return('tao.com')
+allow(conn).to receive(:port).and_return(80)
+conn.host
+
+conn.host(:arguments, :are, :ignored)
+conn.host(:blocks, :are, :ignored) { :ignored }
+```
+
+
+### Mocks
+
+```ruby
+conn = double('Faraday:Connection')
+expect(conn).to receive(:path_prefix)
+conn.path_prefix('/login')
+
+RSpec::Mocks.verify
+# =>
+# RSpec::Mocks::MockExpectationError: \
+#   (Double "Faraday:Connection").path_prefix(*(any args))
+```
+
+Opposite behavior.
+
+```ruby
+conn = double('Faraday:Connection')
+expect(conn).not_to receive(:path_prefix)
+
+RSpec::Mocks.verify
+# =>
+# {}
+```
+
+
+### Null Objects
+
+Forgiving any send message.
+
+```ruby
+bob = double('Programmer').as_null_object
+bob.eat(:pizza).code(:app).eat(:lazagnia).relax
+```
+
+
+### Spies
+
+```ruby
+class RomanNumeral
+  attr_reader :n
+  def initialize(n)
+    @n = n.to_s
+  end
+  def to_roman
+    'LIX'
+  end
+end
+RomanNumeral.new(59).to_roman
+```
+
+A kind of backward Arrange/Act/Assert pattern.
+
+```ruby
+s = double('RomanNumeral')      # Arrange
+expect(s).to receive(:to_roman) # Assert
+s.to_roman                      # Act
+
+RSpec::Mocks.verify
+```
+
+Restoring traditional flow with spies (`receive` => `have_received`)
+
+```ruby
+s1 = double('RomanNumeral')            # Arrange
+allow(s1).to receive(:to_roman)
+s1.to_roman                            # Act
+expect(s1).to have_received(:to_roman) # Assert
+```
+
+or convert to Null Object
+
+```ruby
+s2 = double('RomanNumeral').as_null_object # Arrange
+s2.to_roman                                # Act
+expect(s2).to have_received(:to_roman)     # Assert
+```
+
+or use `spy` to better express intentions in code
+
+```ruby
+s3 = spy('RomanNumeral')               # Arrange
+s3.to_roman                            # Act
+expect(s3).to have_received(:to_roman) # Assert
+```
+
+
+## Origins: Pure, Partial & Verifying Doubles
+
+* Receiving expected messages (pol. komunikat, wiadomość).
+* Receiving unexpected messages.
+* Not receiving expected messages.
+
+Use standalone mode.
+
+```ruby
+require 'rspec/mocks/standalone'
+```
+
+### Partial Doubles
+
+Add mocking/stubbing to existing ruby objects.
+
+```ruby
+random = Random.new
+random.rand
+
+allow(random).to receive(:rand).and_return(0.1234)
+random.rand
+```
+
+```ruby
+Dir.mktmpdir
+
+allow(Dir).to receive(:mktmpdir).and_yield('/tmp/xyz-1234')
+Dir.mktmpdir { |dir| puts "#{dir}" }
+expect(Dir).to have_received(:mktmpdir) # use partial double as Spy
+
+RSpec::Mocks.teardown
+
+Dir.mktmpdir { |dir| puts "#{dir}" }
+```
+
+
+### Verifying Doubles
+
+Mocking the class didn’t exist.
+
+Without verification:
+
+```ruby
+account = double('Account')
+allow(account).to receive(:bank_charge)
+```
+
+With verification:
+
+```ruby
+account = instance_double('Account')
+allow(account).to receive(:charge)
+```
+
+
+### Try yourself
+
+* A guided exercise
+  https://github.com/rspec-3-book/book-code/tree/master/13-understanding-test-doubles/exercises[Nuances of verifying doubles].
+
+
+## Expecting arguments
+
+Most of the test doubles you’ve created will accept any input.
+
+* https://github.com/rspec/rspec-mocks#expecting-arguments[Expecting Arguments]
+
+```ruby
+movie = double('Jurassic Park')
+
+# constraining arguments
+allow(movie).to receive(:record_review).with(/classic/i, 5)
+movie.record_review('Classic thriller', 5)
+
+movie.record_review('Classic thriller', 4)
+movie.record_review('Great thriller', 5)
+
+movie2 = double('Jurassic Park 2')
+
+# argument placeholders: anything, any_args, no_args, duck_type
+#   http://rspec.info/documentation/3.4/rspec-mocks/RSpec/Mocks/ArgumentMatchers.html
+allow(movie2).to receive(:review).with(anything)
+
+movie2.review('Great SF adventure')
+movie2.review('Captivating special effect', 4)
+```
+
+See docs for more: how many times a method gets called, hash and keyword arguments.
+
+
+## Expecting Responses
+
+When you *allow* or *expect* a message on a test double without specifying how
+it responds, RSpec provides a simple implementation that just returns *nil*.
+
+* https://github.com/rspec/rspec-mocks#setting-responses[Setting Responses]
+
+```ruby
+require 'rspec/mocks/standalone'
+
+# fake implementation for these arguments
+allow(File).to receive(:read).with('/etc/sudoers').and_raise('Odmówiono dostępu')
+File.read '/etc/sudoers'
+
+# fallback to the original implementation
+allow(File).to receive(:read).and_call_original
+File.read '/etc/sudoers'
+
+# modify the return value
+allow(File).to receive(:readlines).and_wrap_original do |original|
+  content = original.call('/etc/passwd')
+  content.take 13
+end
+File.readlines '/etc/passwd'
+```

@@ -1,0 +1,67 @@
+# RSpec w przykładach
+:source-highlighter: pygments
+:pygments-style: pastie
+:icons: font
+:experimental:
+:imagesdir: ./images
+
+Don’t Overdo It! (https://stackoverflow.com/questions/153234/how-deep-are-your-unit-tests/153565#153565[from an answer to StackOverflow question])
+[quote, Kent Beck]
+____
+[…] my philosophy is to test as little as possible to reach a given level of confidence
+____
+
+
+## Atom
+
+* RSpec runner package – https://github.com/fcoury/atom-rspec[rspec]
+* other RSpec packages: _rspec-snippets_, _language-rspec_, _linter_, _linter-ui-default_, _linter-rubocop_
+
+
+## Bundler
+
+```sh
+bundle init
+rspec --init
+mkdir lib
+```
+
+Update generated _Gemfile_:
+
+.Gemfile
+```ruby
+gem 'rspec', '~> 3.7.0'
+```
+
+and run
+
+```sh
+bundle install --path .bundle
+```
+
+## RSpec expectations na konsoli (_irb_ lub _pry_)
+
+```ruby
+require 'rspec/expectations'
+include RSpec::Matchers
+
+subject = 1
+matcher = eq(1)
+expect(subject).to matcher
+
+expect(1).to eq(1)
+```
+
+
+## Przykładowe projekty korzystające z RSpec
+
+. https://github.com/halostatue/diff-lcs[diff-lcs] –
+  generate difference sets between Ruby sequences using the McIlroy-Hunt longest
+  common subsequence (LCS) algorithm
+
+
+## Różne rodzaje testów
+
+Acceptance:: Does the whole system work?
+Unit:: Do our objects do the right thing, are they convenient to work with?
+Integration:: Does our code work against code we can’t change?

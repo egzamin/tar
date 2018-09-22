@@ -30,7 +30,7 @@ Update generated _Gemfile_:
 
 .Gemfile
 ```ruby
-gem 'rspec', '~> 3.7.0'
+gem 'rspec', '~> 3.8.0'
 ```
 
 and run
@@ -57,7 +57,9 @@ expect(1).to eq(1)
 
 . https://github.com/halostatue/diff-lcs[diff-lcs] –
   generate difference sets between Ruby sequences using the McIlroy-Hunt longest
-  common subsequence (LCS) algorithm
+  common subsequence (LCS) algorithm.
+. https://github.com/octokit/octokit.rb[Octokit] –
+  Ruby toolkit for the GitHub API.
 
 
 ## Różne rodzaje testów

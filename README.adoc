@@ -1,4 +1,4 @@
-# RSpec w przykładach
+# Testowanie aplikacji w Ruby
 :source-highlighter: pygments
 :pygments-style: pastie
 :icons: font
@@ -11,16 +11,46 @@ ____
 […] my philosophy is to test as little as possible to reach a given level of confidence
 ____
 
+## Podstawy
 
-## Atom
+Jak ktoś nie programował w językach obiektowych, to powinien
+przejrzeć/przeczytać/zapoznać się z:
+
+1. https://www.learnenough.com/ruby-tutorial[Learn Enough Ruby to Be Dangerous]
+
+Jeśli nie zna poleceń powłoki Bash, systemu Git, porządnego edytora, to
+powinien zajrzeć tutaj:
+
+1. Learn Enough, https://www.learnenough.com
+
+Użyteczne dodatki do edytora Atom
 
 * RSpec runner package – https://github.com/fcoury/atom-rspec[rspec]
-* other RSpec packages: _rspec-snippets_, _language-rspec_, _linter_, _linter-ui-default_, _linter-rubocop_
+* other RSpec packages: _rspec-snippets_, _language-rspec_, _linter_,
+  _linter-ui-default_, _linter-rubocop_
 
 
-## Bundler
+## Ruby + wprowadzenie do testowania
+
+1. CodeQuizzes, http://www.codequizzes.com/ruby
+2. Learn X in Y minutes, https://learnxinyminutes.com/docs/ruby/ (irb -> pry)
+3. Ruby Docs, http://ruby-doc.org, Core API – Array, Hash, Enumerable
+4. Exercism, https://exercism.io/tracks/ruby
+
+
+## RSpec
+
+1. https://github.com/rspec/rspec[RSpec sources]
+2. https://pragprog.com/book/rspec3/effective-testing-with-rspec-3[Effective Testing with RSpec 3] –
+  nasz podręcznik
+
+
+## Szablon projektu
 
 ```sh
+mkdir NAZWA_PROJEKTU
+cd NAZWA_PROJEKTU
+
 bundle init
 rspec --init
 mkdir lib
@@ -30,7 +60,8 @@ Update generated _Gemfile_:
 
 .Gemfile
 ```ruby
-gem 'rspec', '~> 3.7.0'
+gem 'pry'
+gem 'rspec', '~> 3.8.0'
 ```
 
 and run
@@ -62,6 +93,6 @@ expect(1).to eq(1)
 
 ## Różne rodzaje testów
 
-Acceptance:: Does the whole system work?
 Unit:: Do our objects do the right thing, are they convenient to work with?
+Acceptance:: Does the whole system work?
 Integration:: Does our code work against code we can’t change?

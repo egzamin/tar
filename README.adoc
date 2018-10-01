@@ -28,13 +28,31 @@ Użyteczne dodatki do edytora Atom
   _linter-ui-default_, _linter-rubocop_
 
 
-## Ruby + wprowadzenie do testowania
+## Wprowadzenie do testowania
 
-1. http://www.codequizzes.com/ruby[CodeQuizzes].
-2. https://learnxinyminutes.com/docs/ruby[Learn X in Y minutes]
+1. https://ruby.github.io/TryRuby/[Try Ruby] –
+  Got 30 minutes? Give Ruby a shot right now!
+
+### Ruby + MiniTest
+
+. https://exercism.io[Exercism]:
+.. https://exercism.io/tracks/ruby[Ruby Track]
+. http://docs.seattlerb.org/minitest/Minitest/Assertions.html[Minitest::Assertions]
+
+### Podstawy języka Ruby
+
+1. http://www.codequizzes.com/ruby[CodeQuizzes] – Ruby track.
+1. https://learnxinyminutes.com/docs/ruby[Learn X in Y minutes]
   (irb -> pry).
-3. http://ruby-doc.org[Ruby Docs] –
+1. http://ruby-doc.org[Ruby Docs] –
   Core API (Array, Hash, Enumerable).
+
+### Ruby + RSpec
+
+1. Nasz podręcznik –
+   Myron Marston, Ian Dees.
+   https://pragprog.com/book/rspec3/effective-testing-with-rspec-3[Effective Testing with RSpec 3].
+1. Źródła, dokumentacja – https://github.com/rspec/rspec[RSpec].
 
 
 ### Rodzaje testów
@@ -42,21 +60,6 @@ Użyteczne dodatki do edytora Atom
 Unit:: Do our objects do the right thing, are they convenient to work with?
 Acceptance:: Does the whole system work?
 Integration:: Does our code work against code we can’t change?
-
-
-## Ruby + MiniTest
-
-. https://exercism.io[Exercism]:
-.. https://exercism.io/tracks/ruby[Ruby Track]
-. http://docs.seattlerb.org/minitest/Minitest/Assertions.html[Minitest::Assertions]
-
-
-## RSpec
-
-1. Nasz podręcznik –
-   Myron Marston, Ian Dees.
-   https://pragprog.com/book/rspec3/effective-testing-with-rspec-3[Effective Testing with RSpec 3].
-1. Źródła, dokumentacja – https://github.com/rspec/rspec[RSpec].
 
 
 ## Szablon projektu

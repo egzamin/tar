@@ -16,12 +16,10 @@ ____
 Jak ktoś nie programował w językach obiektowych, to powinien
 przejrzeć/przeczytać/zapoznać się z:
 
-1. https://www.learnenough.com/ruby-tutorial[Learn Enough Ruby to Be Dangerous]
+* https://www.learnenough.com/ruby-tutorial[Learn Enough Ruby to Be Dangerous].
 
 Jeśli nie zna poleceń powłoki Bash, systemu Git, porządnego edytora, to
-powinien zajrzeć tutaj:
-
-1. Learn Enough, https://www.learnenough.com
+powinien zajrzeć też tutaj https://www.learnenough.com[Learn Enough].
 
 Użyteczne dodatki do edytora Atom
 

@@ -32,17 +32,33 @@ Użyteczne dodatki do edytora Atom
 
 ## Ruby + wprowadzenie do testowania
 
-1. CodeQuizzes, http://www.codequizzes.com/ruby
-2. Learn X in Y minutes, https://learnxinyminutes.com/docs/ruby/ (irb -> pry)
-3. Ruby Docs, http://ruby-doc.org, Core API – Array, Hash, Enumerable
-4. Exercism, https://exercism.io/tracks/ruby
+1. http://www.codequizzes.com/ruby[CodeQuizzes].
+2. https://learnxinyminutes.com/docs/ruby[Learn X in Y minutes]
+  (irb -> pry).
+3. http://ruby-doc.org[Ruby Docs] –
+  Core API (Array, Hash, Enumerable).
+
+
+### Rodzaje testów
+
+Unit:: Do our objects do the right thing, are they convenient to work with?
+Acceptance:: Does the whole system work?
+Integration:: Does our code work against code we can’t change?
+
+
+## Ruby + MiniTest
+
+. https://exercism.io[Exercism]:
+.. https://exercism.io/tracks/ruby[Ruby Track]
+. http://docs.seattlerb.org/minitest/Minitest/Assertions.html[Minitest::Assertions]
 
 
 ## RSpec
 
-1. https://github.com/rspec/rspec[RSpec sources]
-2. https://pragprog.com/book/rspec3/effective-testing-with-rspec-3[Effective Testing with RSpec 3] –
-  nasz podręcznik
+1. Nasz podręcznik –
+   Myron Marston, Ian Dees.
+   https://pragprog.com/book/rspec3/effective-testing-with-rspec-3[Effective Testing with RSpec 3].
+1. Źródła, dokumentacja – https://github.com/rspec/rspec[RSpec].
 
 
 ## Szablon projektu
@@ -92,10 +108,3 @@ expect(1).to eq(1)
   common subsequence (LCS) algorithm.
 . https://github.com/octokit/octokit.rb[Octokit] –
   Ruby toolkit for the GitHub API.
-
-
-## Różne rodzaje testów
-
-Unit:: Do our objects do the right thing, are they convenient to work with?
-Acceptance:: Does the whole system work?
-Integration:: Does our code work against code we can’t change?

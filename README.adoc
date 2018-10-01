@@ -76,6 +76,7 @@ Update generated _Gemfile_:
 ```ruby
 gem 'pry'
 gem 'rspec', '~> 3.8.0'
+gem 'minitest', '~> 5.11.3'
 ```
 
 and run (local installation):

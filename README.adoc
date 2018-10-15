@@ -78,8 +78,11 @@ Update generated _Gemfile_:
 .Gemfile
 ```ruby
 gem 'pry'
-gem 'rspec', '~> 3.8.0'
-gem 'minitest', '~> 5.11.3'
+
+group :test do
+  gem 'rspec', '~> 3.8.0'
+  gem 'minitest', '~> 5.11.3'
+end
 ```
 
 and run (local installation):

@@ -77,11 +77,12 @@ Update generated _Gemfile_:
 
 .Gemfile
 ```ruby
-gem 'pry'
-
 group :test do
   gem 'rspec', '~> 3.8.0'
   gem 'minitest', '~> 5.11.3'
+
+  gem 'coderay'
+  gem 'pry'
 end
 ```
 

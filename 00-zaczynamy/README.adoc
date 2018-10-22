@@ -8,17 +8,21 @@
 
 Zawsze zaczynamy od wykonania tych poleceń:
 ```sh
-ruby -v # ~> 2.5.1
+ruby -v # ~> 2.5.3
 bundle init
 rspec --init
 mkdir lib
 ```
 uaktualnienia wygenerowanego pliku _Gemfile_:
 ```ruby
+group :development do
+  gem 'pry'
+  gem 'coderay'
+end
+
 group :test do
   gem 'rspec', '~> 3.8.0'
   gem 'minitest', '~> 5.11.3'
-  gem 'pry'
 end
 ```
 i wygenerowania pliku _Gemfile.lock_:

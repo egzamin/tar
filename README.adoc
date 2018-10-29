@@ -11,6 +11,21 @@ ____
 […] my philosophy is to test as little as possible to reach a given level of confidence
 ____
 
+## Egzamin – wymagania
+
+. Projekt zespołowy realizowany w zespołach 3–4 osobowych. 
+
+. Projekt powinien być podłączony do https://travis-ci.org[Travis CI].
+W katalogu głównym repozytorium w pliku `.rspec` należy wpisać:
++
+```sh
+--require spec_helper
+--format documentation
+```
+
+. Linki do kodu umieszczonego w serwisie Travis CI należy dostarczyć do dnia **5.01.2019**.
+
+
 ## Podstawy
 
 Jak ktoś nie programował w językach obiektowych, to powinien

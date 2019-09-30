@@ -23,25 +23,7 @@ W katalogu głównym repozytorium w pliku `.rspec` należy wpisać:
 --format documentation
 ```
 
-. Linki do kodu umieszczonego w serwisie Travis CI należy dostarczyć do dnia **5.01.2019**.
-
-
-## Podstawy
-
-Jak ktoś nie programował w językach obiektowych, to powinien
-przejrzeć/przeczytać/zapoznać się z:
-
-* https://www.learnenough.com/ruby-tutorial[Learn Enough Ruby to Be Dangerous].
-
-Jeśli nie zna poleceń powłoki Bash, systemu Git, porządnego edytora, to
-powinien zajrzeć też tutaj https://www.learnenough.com[Learn Enough].
-
-Użyteczne dodatki do edytora Atom
-
-* RSpec runner package – https://github.com/fcoury/atom-rspec[rspec]
-* other RSpec packages: _rspec-snippets_, _language-rspec_, _linter_,
-  _linter-ui-default_, _linter-rubocop_
-
+. Linki do kodu umieszczonego w serwisie Travis CI należy dostarczyć do dnia **2.01.2020**.
 
 ## Wprowadzenie do testowania
 

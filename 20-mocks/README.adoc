@@ -46,9 +46,9 @@ null object doubles, spies, scope.
 
 Examples:
 
-* link:spec/verifying_doubles.rb[verifying doubles]:
-** link:https://github.com/rspec/rspec-mocks#argument-matchers[Argument Matchers] (docs)
-* link:https://github.com/egzamin/tar/tree/master/labs/05-doubles[labs/05-doubles]
+* link:spec/verifying_doubles.rb[verifying doubles]
+* link:https://github.com/rspec/rspec-mocks#argument-matchers[Argument Matchers] docs
+
 
 
 ## Usage Modes

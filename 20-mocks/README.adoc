@@ -102,7 +102,7 @@ conn.host
 
 ### Alternative 1 
 
-Here we use `receive_messages` and the standard 3A pattern: *Arrange, Assert, Act*.
+Here we use `receive_messages` and *non-standard 3A pattern*:
 
 ```ruby
 conn = double('Faraday:Connection')
@@ -110,7 +110,8 @@ allow(conn).to receive_messages(host: 'tao.com', port: 80)
 conn.host
 ```
 
-*Note changed order in the 3A pattern* above.*
+The standard 3A pattern: *Arrange, Assert, Act*.
+
 
 ### Alternative 2 
 

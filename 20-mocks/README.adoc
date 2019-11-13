@@ -80,7 +80,7 @@ require 'rspec/mocks/standalone'
 ```
 
 
-### Generic test doubles
+## Generic test doubles
 
 ```ruby
 account = double('Account')
@@ -91,7 +91,7 @@ account.charge
 ```
 
 
-### Stubs
+## Stubs
 
 Basic setup:
 
@@ -100,7 +100,9 @@ conn = double('Faraday::Connection', host: 'tao.com', port: 80)
 conn.host
 ```
 
-Alternative 1 (use `receive_messages`) Arrange, Assert, Act (*note changed order in 3A pattern*)
+### Alternative 1 
+
+Here we use `receive_messages` and the standard 3A pattern: *Arrange, Assert, Act*.
 
 ```ruby
 conn = double('Faraday:Connection')
@@ -108,7 +110,12 @@ allow(conn).to receive_messages(host: 'tao.com', port: 80)
 conn.host
 ```
 
-Alternative 2 (use `receive` & `and_return`)
+*Note changed order in the 3A pattern* above.*
+
+### Alternative 2 
+
+Here we use `receive` & `and_return`.
+
 ```ruby
 conn = double('Faraday:Connection')
 allow(conn).to receive(:host).and_return('tao.com')
@@ -120,7 +127,7 @@ conn.host(:blocks, :are, :ignored) { :ignored }
 ```
 
 
-### Mocks
+## Mocks
 
 ```ruby
 conn = double('Faraday:Connection')
@@ -145,7 +152,7 @@ RSpec::Mocks.verify
 ```
 
 
-### Null Objects
+## Null Objects
 
 Forgiving any send message.
 
@@ -155,7 +162,7 @@ bob.eat(:pizza).code(:app).eat(:lazagnia).relax
 ```
 
 
-### Spies
+## Spies
 
 ```ruby
 class RomanNumeral
@@ -243,7 +250,7 @@ Dir.mktmpdir { |dir| puts "#{dir}" }
 ```
 
 
-### Verifying Doubles
+## Verifying Doubles
 
 Mocking the class didn’t exist.
 
@@ -262,7 +269,7 @@ allow(account).to receive(:charge)
 ```
 
 
-### Try yourself
+## Try yourself
 
 * A guided exercise
   https://github.com/rspec-3-book/book-code/tree/master/13-understanding-test-doubles/exercises[Nuances of verifying doubles].

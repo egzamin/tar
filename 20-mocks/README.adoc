@@ -100,7 +100,7 @@ conn = double('Faraday::Connection', host: 'tao.com', port: 80)
 conn.host
 ```
 
-### Alternative 1 
+### Alternative 1, zob. https://xp123.com/articles/3a-arrange-act-assert/[3A – Arrange, Act, Assert]
 
 Here we use `receive_messages` and *non-standard 3A pattern*:
 
@@ -109,9 +109,6 @@ conn = double('Faraday:Connection')
 allow(conn).to receive_messages(host: 'tao.com', port: 80)
 conn.host
 ```
-
-The standard 3A pattern: *Arrange, Assert, Act*.
-
 
 ### Alternative 2 
 

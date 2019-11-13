@@ -133,12 +133,16 @@ conn.host(:blocks, :are, :ignored) { :ignored }
 ```ruby
 conn = double('Faraday:Connection')
 expect(conn).to receive(:path_prefix)
+
+RSpec::Mocks.verify
+# RSpec::Mocks::MockExpectationError: (Double "Faraday:Connection").path_prefix(*(any args))
+#     expected: 1 time with any arguments
+#     received: 0 times with any arguments
+    
 conn.path_prefix('/login')
 
 RSpec::Mocks.verify
-# =>
-# RSpec::Mocks::MockExpectationError: \
-#   (Double "Faraday:Connection").path_prefix(*(any args))
+# {}
 ```
 
 Opposite behavior.
@@ -148,7 +152,6 @@ conn = double('Faraday:Connection')
 expect(conn).not_to receive(:path_prefix)
 
 RSpec::Mocks.verify
-# =>
 # {}
 ```
 

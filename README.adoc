@@ -11,6 +11,27 @@ ____
 […] my philosophy is to test as little as possible to reach a given level of confidence
 ____
 
+## Mocking Hell
+
+Gerard Meszaros, _xUnit Test Patterns Refactoring Test Code_, Addison Wesley (2007).
+
+* http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html[Mocks, Fakes, Stubs and Dummies]
+* http://xunitpatterns.com/Test%20Double%20Patterns.html[Test Double Patterns]
+** http://xunitpatterns.com/Test%20Double.html[Test Double] also known as *Imposter*
+** http://xunitpatterns.com/Test%20Spy.html[Test Spy]
+** http://xunitpatterns.com/Mock%20Object.html[Mock Object]
+** http://xunitpatterns.com/Fake%20Object.html[Fake Object]
+** http://xunitpatterns.com/Configurable%20Test%20Double.html[Configurable Test Double]
+** http://xunitpatterns.com/Hard-Coded%20Test%20Double.html[Hard-Coded Test Double]
+
+High fidelity fakes:
+
+* https://github.com/fakefs/fakefs[FakeFS]
+* https://github.com/fog/fog[Fog] gem mocks Amazon services, Rackspace, …
+* https://github.com/vcr/vcr[VCR] gem fakes HTTP interactions
+* https://ruby-doc.org/stdlib-2.4.2/libdoc/stringio/rdoc/index.html[StringIO] distributed with Ruby
+
+
 ## Egzamin – wymagania
 
 . Projekt zespołowy realizowany w zespołach 3–4 osobowych. 

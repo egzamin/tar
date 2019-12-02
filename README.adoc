@@ -22,6 +22,26 @@ W katalogu głównym repozytorium w pliku `.rspec` należy wpisać:
 --require spec_helper
 --format documentation
 ```
++
+Przykładowy plik `.travis.yml`
++
+```yaml
+env:
+  global:
+   - CC_TEST_REPORTER_ID=<see here: https://docs.codeclimate.com/v1.0/docs/finding-your-test-coverage-token>
+rvm:
+ - 2.3.8
+ - 2.6.2
+before_install:
+- gem update --system
+- gem install bundler
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+```
 
 . Linki do kodu umieszczonego w serwisie Travis CI należy dostarczyć do dnia **2.01.2020**.
 

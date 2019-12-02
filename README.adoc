@@ -26,7 +26,7 @@ Gerard Meszaros, _xUnit Test Patterns Refactoring Test Code_, Addison Wesley (20
 
 High fidelity fakes:
 
-* https://github.com/fakefs/fakefs[FakeFS]
+* https://github.com/fakefs/fakefs[FakeFS] – a fake filesystem
 * https://github.com/fog/fog[Fog] gem mocks Amazon services, Rackspace, …
 * https://github.com/vcr/vcr[VCR] gem fakes HTTP interactions
 * https://ruby-doc.org/stdlib-2.4.2/libdoc/stringio/rdoc/index.html[StringIO] distributed with Ruby
